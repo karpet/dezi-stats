@@ -2,6 +2,8 @@ package Dezi::Stats;
 
 use warnings;
 use strict;
+use Carp;
+use Module::Load;
 
 our $VERSION = '0.001000';
 
@@ -11,9 +13,131 @@ Dezi::Stats - log statistics for your Dezi server
 
 =head1 SYNOPSIS
 
- % dezi --stats=sqlite
+ # example Dezi server application
+ use Dezi::Server;
+ use Plack::Runner;
+ 
+ my $app = Dezi::Server->app({
+    engine_config   => { 
+        type    => 'Lucy',
+        index   => ['path/to/your/index'],
+    },
+    stats_config    => {
+        type    => 'DBI',
+        dsn     => "DBI:mysql:database=$database;host=$hostname;port=$port",
+    }
+ });
+ 
+ my $runner = Plack::Runner->new();
+ $runner->run($app);
+
+=head1 DESCRIPTION
+
+Dezi::Stats logs statistics about requests to a Dezi server.
+There are multiple backend storage options, including DBI-based
+storage (MySQL, Postgresql, SQLite, etc), file-based, etc.
+
+=head1 METHODS
+
+=head2 new( I<config> )
+
+Returns a new Dezi::Stats object. I<config> should be a series
+of key/value pairs (a hash). Supported I<config> params are:
+
+=over
+
+=item type
+
+The backend storage type. Defaults to 'File' (see L<Dezi::Stats::File>).
+
+=item dsn
+
+If B<type> is C<DBI> then the B<dsn> value will be passed directly
+to the DBI->connect() method.
+
+=item username
+
+If B<type> is C<DBI> then the B<username> value will be passed directly
+to the DBI->connect() method.
+
+=item password
+
+If B<type> is C<DBI> then the B<password> value will be passed directly
+to the DBI->connect() method.
+
+=item table_name
+
+If B<type> is C<DBI> then the B<table_name> value will be used
+to insert rows. Defaults to C<dezi_stats>.
+
+=item quote
+
+If B<type> is C<DBI> then the B<quote> value will be used
+to quote column names on insert. Defaults to C<false>.
+
+=item quote_char
+
+If B<type> is C<DBI> then the B<quote_char> value will be used
+when B<quote> is true. Defaults to backtick.
+
+=item path
+
+If B<type> is C<File> then the B<path> value is the filesystem path
+to the log file. See L<Dezi::Stats::File>.
+
+=back
 
 =cut
+
+sub new {
+    my $class = shift;
+    my $self;
+    if ( @_ == 1 ) {
+        $self = shift;
+    }
+    else {
+        $self = {@_};
+    }
+    $self->{type} ||= 'File';
+    my $driver;
+    if ( $self->{type} =~ m/^\+/ ) {
+        $driver = $self->{type};
+        $driver =~ s/^\+//;
+    }
+    else {
+        $driver = 'Dezi::Stats::' . $self->{type};
+    }
+    load $driver;
+    bless $self, $driver;
+    $self->init_store();
+    return $self;
+}
+
+sub init_store {
+    my $self = shift;
+    croak "$self must implement init_store()";
+}
+
+sub log {
+    my $self     = shift;
+    my $request  = shift or croak "Plack::Request object required";
+    my $response = shift or croak "Response object required";
+    my %stats;
+    if ( ref $response eq 'HASH' ) {
+
+        # a REST request on a specific doc
+    }
+    else {
+
+        # a search request
+    }
+    $self->insert( \%stats );
+}
+
+sub insert {
+    my $self = shift;
+    croak "$self must implement insert()";
+}
 
 1;
 

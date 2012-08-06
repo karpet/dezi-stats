@@ -1,0 +1,131 @@
+package Dezi::Stats::DBI;
+
+use warnings;
+use strict;
+use base 'Dezi::Stats';
+use Carp;
+use DBIx::Connector;
+use DBIx::InsertHash;
+
+our $VERSION = '0.001000';
+
+=head1 NAME
+
+Dezi::Stats::DBI - store Dezi statistics in a database
+
+=head1 SYNOPSIS
+
+ # see Dezi::Stats
+
+=head1 DESCRIPTION
+
+Dezi::Stats::DBI logs statistics to any backend supported by DBI.
+This class uses DBIx::Connector to manage a persistent DBI connection.
+
+=head1 METHODS
+
+=head2 init_store()
+
+Sets up the internal database handle (accessible via conn() attribute).
+
+=cut
+
+sub init_store {
+    my $self     = shift;
+    my $dsn      = delete $self->{dsn} or croak "dsn required";
+    my $username = delete $self->{username} or croak "username required";
+    my $password = delete $self->{password} or croak "password required";
+    $self->{table_name} ||= 'dezi_stats';
+    $self->{conn} = DBIx::Connector->new(
+        $dsn,
+        $username,
+        $password,
+        {   RaiseError => 1,
+            AutoCommit => 1,
+        }
+    );
+    $self->{conn}->mode('fixup');    # ping only on failure
+    $self->{ih} = DBIx::InsertHash->new(
+        table      => $self->{table_name},
+        quote      => $self->{quote},
+        quote_char => $self->{quote_char},
+    );
+    return $self;
+}
+
+sub conn {
+    return shift->{conn};
+}
+
+=head2 insert( I<hashref> )
+
+Writes I<hashref> to the database.
+
+=cut
+
+sub insert {
+    my $self = shift;
+    my $row = shift or croak "hashref required";
+    $self->{conn}->run(
+        sub {
+            my $dbh = $_;    # just for clarity
+            $self->{ih}->insert( $row, $self->{table_name}, $dbh );
+        }
+    );
+}
+
+1;
+
+__END__
+
+=head1 AUTHOR
+
+Peter Karman, C<< <karman at cpan.org> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-dezi-stats at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dezi-Stats>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Dezi::Stats
+
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dezi-Stats>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Dezi-Stats>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/Dezi-Stats>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Dezi-Stats/>
+
+=back
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2012 Peter Karman.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+=cut
+
