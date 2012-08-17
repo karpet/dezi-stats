@@ -122,14 +122,24 @@ sub log {
     my $self     = shift;
     my $request  = shift or croak "Plack::Request object required";
     my $response = shift or croak "Response object required";
-    my %stats;
+    my %stats    = (
+        build_time  => $response->build_time,
+        search_time => $response->search_time,
+        remote_user => $request->user,
+    );
+    my $params = $request->parameters;
     if ( ref $response eq 'HASH' ) {
 
         # a REST request on a specific doc
+
     }
     else {
 
         # a search request
+        # TODO document and/or whitelist these
+        for my $p (qw( q s o p h c L f r t b )) {
+            $stats{$p} = $params->{$p};
+        }
     }
     $self->insert( \%stats );
 }

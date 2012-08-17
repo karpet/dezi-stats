@@ -74,6 +74,28 @@ sub insert {
     );
 }
 
+sub table_sql {
+    return <<EOF
+create table dezi_stats (
+    id integer primary key autoincrement,
+    q text,
+    build_time float,
+    search_time float,
+    remote_user text,
+    s text,
+    o integer,
+    p integer,
+    h integer,
+    c integer,
+    L text,
+    f integer,
+    r integer,
+    t varchar(128),
+    b varchar(32)
+);
+EOF
+}
+
 1;
 
 __END__
