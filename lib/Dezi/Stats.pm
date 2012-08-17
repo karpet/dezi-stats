@@ -16,16 +16,19 @@ Dezi::Stats - log statistics for your Dezi server
  # example Dezi server application
  use Dezi::Server;
  use Plack::Runner;
+ use Dezi::Stats;
  
  my $app = Dezi::Server->app({
     engine_config   => { 
         type    => 'Lucy',
         index   => ['path/to/your/index'],
     },
-    stats_config    => {
-        type    => 'DBI',
-        dsn     => "DBI:mysql:database=$database;host=$hostname;port=$port",
-    }
+    stats_logger => Dezi::Stats->new(
+        type        => 'DBI',
+        dsn         => "DBI:mysql:database=$database;host=$hostname;port=$port",
+        username    => 'myuser',
+        password    => 'mysecret',
+    ),
  });
  
  my $runner = Plack::Runner->new();
@@ -113,10 +116,30 @@ sub new {
     return $self;
 }
 
+=head2 init_store
+
+All subclasses must implement this abstract method.
+Called internally in new().
+
+=cut
+
 sub init_store {
     my $self = shift;
     croak "$self must implement init_store()";
 }
+
+=head2 log( I<plack_request>, I<sos_response> )
+
+Required method for Search::OpenSearch::Server stats_logger()
+API.
+
+Expects 2 objects: the current Plack::Request and the resulting
+Search::OpenSearch::Response.
+
+Calls insert() after pulling data from the request
+and the response.
+
+=cut
 
 sub log {
     my $self     = shift;
@@ -143,6 +166,12 @@ sub log {
     }
     $self->insert( \%stats );
 }
+
+=head2 insert( I<hash_ref> )
+
+Called by log. All subclasses must implement this abstract method.
+
+=cut
 
 sub insert {
     my $self = shift;

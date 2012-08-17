@@ -53,6 +53,12 @@ sub init_store {
     return $self;
 }
 
+=head2 conn
+
+Returns the internal DBIx::Connector object.
+
+=cut
+
 sub conn {
     return shift->{conn};
 }
@@ -73,6 +79,17 @@ sub insert {
         }
     );
 }
+
+=head2 table_sql
+
+Callable as a function or class method. Returns string suitable
+for initializing a B<dezi_stats> SQL table.
+
+Example:
+
+ perl -e 'use Dezi::Stats::DBI; print Dezi::Stats::DBI::table_sql' | sqlite3 dezi.index/stats.db
+
+=cut
 
 sub table_sql {
     return <<EOF
