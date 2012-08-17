@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 use Carp;
 use Data::Dump qw( dump );
@@ -18,7 +18,7 @@ SKIP: {
     eval "use Log::Dispatchouli";
     if ($@) {
         diag "install Log::Dispatchouli to test Dezi::Stats::File";
-        skip "Log::Dispatchouli not installed", 5;
+        skip "Log::Dispatchouli not installed", 6;
     }
 
     ok( my $stats = Dezi::Stats->new(
@@ -62,8 +62,27 @@ SKIP: {
     # get the logger events
     ok( my $events = $stats->dispatcher->events, "get events" );
 
-    dump $events;
+    #dump $events;
 
-    
+    is( scalar @$events, 1, "got one event" );
+    is_deeply(
+        decode_json( $events->[0]->{message} ),
+        {   L           => undef,
+            b           => undef,
+            build_time  => undef,
+            c           => undef,
+            f           => undef,
+            h           => undef,
+            o           => 0,
+            p           => 100,
+            "q"         => "test",
+            r           => undef,
+            remote_user => undef,
+            "s"         => "foo ASC",
+            search_time => undef,
+            t           => undef,
+        },
+        "got expected stats event"
+    );
 
 }

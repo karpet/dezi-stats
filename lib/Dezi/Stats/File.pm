@@ -11,7 +11,7 @@ our $VERSION = '0.001000';
 
 =head1 NAME
 
-Dezi::Stats::DBI - store Dezi statistics in a database
+Dezi::Stats::File - store Dezi statistics via Log::Dispatchouli
 
 =head1 SYNOPSIS
 
@@ -19,14 +19,15 @@ Dezi::Stats::DBI - store Dezi statistics in a database
 
 =head1 DESCRIPTION
 
-Dezi::Stats::DBI logs statistics to any backend supported by DBI.
-This class uses DBIx::Connector to manage a persistent DBI connection.
+Dezi::Stats::File logs statistics using Log::Dispatchouli.
 
 =head1 METHODS
 
 =head2 init_store()
 
-Sets up the internal database handle (accessible via conn() attribute).
+Required method. Initializes the internal Log::Dispatchouli object.
+You can pass any params supported by Log::Dispatchouli->new()
+directly to Dezi::Stats->new().
 
 =cut
 
@@ -36,10 +37,16 @@ sub init_store {
     my %args = %$self;
     $args{ident} ||= 'dezi-stats';
 
-    # TODO filter out any that Log::D doesn't support
+    # TODO filter out any that LD doesn't support
     $self->{dispatcher} = Log::Dispatchouli->new( \%args, );
     return $self;
 }
+
+=head2 dispatcher
+
+Returns the internal Log::Dispatchouli object.
+
+=cut
 
 sub dispatcher {
     my $self = shift;
@@ -48,7 +55,7 @@ sub dispatcher {
 
 =head2 insert( I<hashref> )
 
-Writes I<hashref> to the log file.
+Writes I<hashref> encoded as JSON to the dispatcher()->log method.
 
 =cut
 
@@ -62,6 +69,10 @@ sub insert {
 1;
 
 __END__
+
+=head1 SEE ALSO
+
+L<Log::Dispatchouli>
 
 =head1 AUTHOR
 
