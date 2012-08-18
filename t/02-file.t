@@ -65,8 +65,9 @@ SKIP: {
     #dump $events;
 
     is( scalar @$events, 1, "got one event" );
+    my $row = decode_json( $events->[0]->{message} );
     is_deeply(
-        decode_json( $events->[0]->{message} ),
+        $row,
         {   L           => undef,
             b           => undef,
             build_time  => undef,
@@ -81,6 +82,7 @@ SKIP: {
             "s"         => "foo ASC",
             search_time => undef,
             t           => undef,
+            tstamp      => $row->{tstamp},
         },
         "got expected stats event"
     );

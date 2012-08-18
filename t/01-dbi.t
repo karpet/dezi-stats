@@ -34,7 +34,7 @@ SKIP: {
 
     # init the db
     my $dbh = $stats->conn->dbh;
-    ok( my $r = $dbh->do( $stats->table_sql ), "init db" );
+    ok( my $r = $dbh->do( $stats->schema ), "init db" );
     if ( !$r ) {
         croak "init sqlite db $dbfile failed: " . $dbh->errstr;
     }
@@ -87,6 +87,7 @@ SKIP: {
             "s"         => "foo ASC",
             search_time => undef,
             t           => undef,
+            tstamp      => $row->{tstamp},
         },
         "got expected stats row"
     );

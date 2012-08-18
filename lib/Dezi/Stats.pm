@@ -149,6 +149,7 @@ sub log {
         build_time  => $response->build_time,
         search_time => $response->search_time,
         remote_user => $request->user,
+        tstamp      => time(),
     );
     my $params = $request->parameters;
     if ( ref $response eq 'HASH' ) {

@@ -80,21 +80,22 @@ sub insert {
     );
 }
 
-=head2 table_sql
+=head2 schema
 
 Callable as a function or class method. Returns string suitable
 for initializing a B<dezi_stats> SQL table.
 
 Example:
 
- perl -e 'use Dezi::Stats::DBI; print Dezi::Stats::DBI::table_sql' | sqlite3 dezi.index/stats.db
+ perl -e 'use Dezi::Stats::DBI; print Dezi::Stats::DBI::schema' | sqlite3 dezi.index/stats.db
 
 =cut
 
-sub table_sql {
+sub schema {
     return <<EOF
 create table dezi_stats (
     id integer primary key autoincrement,
+    tstamp integer,
     q text,
     build_time float,
     search_time float,
