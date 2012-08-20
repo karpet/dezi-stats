@@ -5,3 +5,6 @@ Revision history for Dezi-Stats
 
 0.001001    20 Aug 2012
     * fix number of tests, and prereq tests
+
+0.001002    xxx
+    * fix REST response to treat as hash ref
