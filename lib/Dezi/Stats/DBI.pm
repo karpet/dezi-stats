@@ -7,7 +7,7 @@ use Carp;
 use DBIx::Connector;
 use DBIx::InsertHash;
 
-our $VERSION = '0.001001';
+our $VERSION = '0.001002';
 
 =head1 NAME
 
