@@ -19,7 +19,13 @@ SKIP: {
     if ($@) {
         diag "install DBIx::Connector to test Dezi::Stats::DBI";
         skip "DBIx::Connector not installed", 5;
-    }   
+    }
+
+    eval "use DBIx::InsertHash";
+    if ($@) {
+        diag "install DBIx::InsertHash to test Dezi::Stats::DBI";
+        skip "DBIx::InsertHash not installed", 5;
+    }
 
     eval "use DBD::SQLite";
     if ($@) {
@@ -64,7 +70,8 @@ SKIP: {
             my $res = $cb->($req);
 
             #dump $res;
-            ok( my $json = decode_json( $res->content ), "decode_json content");
+            ok( my $json = decode_json( $res->content ),
+                "decode_json content" );
 
             #dump $json;
         }
