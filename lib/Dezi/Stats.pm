@@ -146,8 +146,6 @@ sub log {
     my $request  = shift or croak "Plack::Request object required";
     my $response = shift or croak "Response object required";
     my %stats    = (
-        build_time  => $response->build_time,
-        search_time => $response->search_time,
         remote_user => $request->user,
         tstamp      => time(),
     );
@@ -155,7 +153,8 @@ sub log {
     if ( ref $response eq 'HASH' ) {
 
         # a REST request on a specific doc
-
+        $stats{build_time}  = $response->{build_time};
+        $stats{search_time} = $response->{search_time};
     }
     else {
 
@@ -164,6 +163,9 @@ sub log {
         for my $p (qw( q s o p h c L f r t b )) {
             $stats{$p} = $params->{$p};
         }
+
+        $stats{build_time}  = $response->build_time;
+        $stats{search_time} = $response->search_time;
     }
     $self->insert( \%stats );
 }
