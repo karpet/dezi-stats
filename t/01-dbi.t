@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 use Carp;
 use Data::Dump qw( dump );
@@ -14,6 +14,12 @@ use Search::OpenSearch::Response::JSON;
 use_ok('Dezi::Stats');
 
 SKIP: {
+
+    eval "use DBIx::Connector";
+    if ($@) {
+        diag "install DBIx::Connector to test Dezi::Stats::DBI";
+        skip "DBIx::Connector not installed", 5;
+    }   
 
     eval "use DBD::SQLite";
     if ($@) {
@@ -58,7 +64,7 @@ SKIP: {
             my $res = $cb->($req);
 
             #dump $res;
-            my $json = decode_json( $res->content );
+            ok( my $json = decode_json( $res->content ), "decode_json content");
 
             #dump $json;
         }

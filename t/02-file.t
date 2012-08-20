@@ -18,7 +18,7 @@ SKIP: {
     eval "use Log::Dispatchouli";
     if ($@) {
         diag "install Log::Dispatchouli to test Dezi::Stats::File";
-        skip "Log::Dispatchouli not installed", 6;
+        skip "Log::Dispatchouli not installed", 5;
     }
 
     ok( my $stats = Dezi::Stats->new(
