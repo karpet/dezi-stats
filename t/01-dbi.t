@@ -65,8 +65,8 @@ SKIP: {
         app    => $app,
         client => sub {
             my $cb  = shift;
-            my $req = HTTP::Request->new(
-                GET => 'http://localhost?q=test&s=foo+ASC&o=0&p=100' );
+            my $req = HTTP::Request->new( GET =>
+                    'http://localhost/search/?q=test&s=foo+ASC&o=0&p=100' );
             my $res = $cb->($req);
 
             #dump $res;
@@ -101,6 +101,7 @@ SKIP: {
             search_time => undef,
             t           => undef,
             tstamp      => $row->{tstamp},
+            path        => '/search/',
         },
         "got expected stats row"
     );

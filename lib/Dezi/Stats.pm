@@ -148,24 +148,23 @@ sub log {
     my %stats    = (
         remote_user => $request->user,
         tstamp      => time(),
+        build_time  => $response->build_time,
+        search_time => $response->search_time,
+        path        => $request->uri->path,
     );
     my $params = $request->parameters;
-    if ( ref $response eq 'HASH' ) {
+    if ( $response->isa('Search::OpenSearch::Result') ) {
 
         # a REST request on a specific doc
-        $stats{build_time}  = $response->{build_time};
-        $stats{search_time} = $response->{search_time};
+
     }
     else {
 
-        # a search request
+        # a SOS::Response
         # TODO document and/or whitelist these
         for my $p (qw( q s o p h c L f r t b )) {
             $stats{$p} = $params->{$p};
         }
-
-        $stats{build_time}  = $response->build_time;
-        $stats{search_time} = $response->search_time;
     }
     $self->insert( \%stats );
 }
