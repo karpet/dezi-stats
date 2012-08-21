@@ -5,12 +5,13 @@ use 5.008003;
 
 name 'Dezi-Stats';
 all_from 'lib/Dezi/Stats.pm';
-requires 'Test::More'          => 0;
-requires 'Dezi'                => 0.001006;
-requires 'Module::Load'        => 0;
-recommends 'DBIx::Connector'   => 0;
-recommends 'DBIx::InsertHash'  => 0;
-recommends 'Log::Dispatchouli' => 0;
+requires 'Test::More'                 => 0;
+requires 'Search::OpenSearch::Server' => 0.15;
+requires 'Dezi'                       => 0.001006;
+requires 'Module::Load'               => 0;
+recommends 'DBIx::Connector'          => 0;
+recommends 'DBIx::InsertHash'         => 0;
+recommends 'Log::Dispatchouli'        => 0;
 
 perl_version '5.8.3';
 license 'http://dev.perl.org/licenses/';
