@@ -7,7 +7,7 @@ use Carp;
 use DBIx::Connector;
 use DBIx::InsertHash;
 
-our $VERSION = '0.001002';
+our $VERSION = '0.001003';
 
 =head1 NAME
 
@@ -101,6 +101,7 @@ create table dezi_stats (
     search_time float,
     remote_user text,
     path        varchar(255),
+    total       integer,
     s text,
     o integer,
     p integer,

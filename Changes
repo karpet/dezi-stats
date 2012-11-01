@@ -8,3 +8,6 @@ Revision history for Dezi-Stats
 
 0.001002    20 Aug 2012
     * add URI 'path' to logged stats
+
+0.001003    1 Nov 2012
+    * add 'total' to logged stats

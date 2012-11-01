@@ -5,7 +5,7 @@ use strict;
 use Carp;
 use Module::Load;
 
-our $VERSION = '0.001002';
+our $VERSION = '0.001003';
 
 =head1 NAME
 
@@ -151,6 +151,7 @@ sub log {
         build_time  => $response->build_time,
         search_time => $response->search_time,
         path        => $request->uri->path,
+        total       => $response->total,
     );
     my $params = $request->parameters;
     if ( $response->isa('Search::OpenSearch::Result') ) {

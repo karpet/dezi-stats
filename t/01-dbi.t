@@ -102,6 +102,7 @@ SKIP: {
             t           => undef,
             tstamp      => $row->{tstamp},
             path        => '/search/',
+            total       => undef,
         },
         "got expected stats row"
     );
