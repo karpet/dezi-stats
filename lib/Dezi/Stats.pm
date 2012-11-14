@@ -5,7 +5,7 @@ use strict;
 use Carp;
 use Module::Load;
 
-our $VERSION = '0.001003';
+our $VERSION = '0.001004';
 
 =head1 NAME
 
@@ -146,7 +146,11 @@ sub log {
     my $request  = shift or croak "Plack::Request object required";
     my $response = shift or croak "Response object required";
     my %stats    = (
-        remote_user => $request->user,
+        remote_user => (
+              $request->can('remote_user')
+            ? $request->remote_user
+            : $request->user
+        ),
         tstamp      => time(),
         build_time  => $response->build_time,
         search_time => $response->search_time,

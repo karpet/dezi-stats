@@ -7,7 +7,7 @@ use Carp;
 use Log::Dispatchouli;
 use JSON;
 
-our $VERSION = '0.001003';
+our $VERSION = '0.001004';
 
 =head1 NAME
 

@@ -11,3 +11,7 @@ Revision history for Dezi-Stats
 
 0.001003    1 Nov 2012
     * add 'total' to logged stats
+
+0.001004    13 Nov 2012
+    * now supports remote_user() or user() method on the $request
+      object, preferring remote_user().
