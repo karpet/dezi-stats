@@ -63,6 +63,16 @@ sub conn {
     return shift->{conn};
 }
 
+=head2 table_name
+
+Returns the table_name. Default is C<dezi_stats>.
+
+=cut
+
+sub table_name {
+    return shift->{table_name};
+}
+
 =head2 insert( I<hashref> )
 
 Writes I<hashref> to the database.
