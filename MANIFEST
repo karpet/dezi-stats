@@ -9,6 +9,7 @@ lib/Dezi/Stats/DBI.pm
 lib/Dezi/Stats/File.pm
 Makefile.PL
 MANIFEST
+META.yml
 README.md
 t/00-load.t
 t/01-dbi.t

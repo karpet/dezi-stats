@@ -16,7 +16,7 @@ Revision history for Dezi-Stats
     * now supports remote_user() or user() method on the $request
       object, preferring remote_user().
 
-0.001005    xxx
+0.001005    5 Feb 2013
     * add schema() docs
     * add DBI->table_name method
 
