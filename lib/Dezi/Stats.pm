@@ -5,7 +5,7 @@ use strict;
 use Carp;
 use Module::Load;
 
-our $VERSION = '0.001005';
+our $VERSION = '0.001006';
 
 =head1 NAME
 

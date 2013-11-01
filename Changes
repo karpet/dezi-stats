@@ -1,5 +1,8 @@
 Revision history for Dezi-Stats
 
+0.001006 1 Nov 2013
+ - pod tests only with RELEASE_TESTING=1
+
 0.001005 5 Feb 2013
  - add schema() docs
  - add DBI->table_name method

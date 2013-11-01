@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use Test::More;
 
+plan skip_all => "set RELEASE_TESTING to test POD" unless $ENV{RELEASE_TESTING};
+
 # Ensure a recent version of Test::Pod
 my $min_tp = 1.22;
 eval "use Test::Pod $min_tp";
